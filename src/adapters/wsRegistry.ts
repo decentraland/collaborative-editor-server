@@ -1,20 +1,11 @@
-import { IBaseComponent } from '@well-known-components/interfaces'
-import { AppComponents, WebSocket } from '../types'
+import { AppComponents, IWSRegistryComponent, WebSocket } from '../types'
 import {
   createInitMessage,
-  decodeMessage,
-  MessageType,
   createParticipantJoinedMessage,
-  createParticipantLeftMessage
+  createParticipantLeftMessage,
+  decodeMessage,
+  MessageType
 } from '../logic/protocol'
-
-export type IWSRegistryComponent = IBaseComponent & {
-  getRooms(): string[]
-  getRoomCount(): number
-  getConnectionCount(): number
-  removeFromRoom(socket: WebSocket): void
-  addSocketToRoom(ws: WebSocket): void
-}
 
 export function createWSRegistry(
   { logs }: Pick<AppComponents, 'logs'>,
