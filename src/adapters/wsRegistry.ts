@@ -64,7 +64,6 @@ export function createWSRegistry(
 
     ws.on('error', (err: any) => {
       logger.error(err)
-      removeFromRoom(ws)
     })
 
     ws.on('close', () => {
