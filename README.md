@@ -1,25 +1,32 @@
 # Running locally
 
-Create a `.env` file with the var `LOCAL_SCENE_PATH` pointed to your scene compiled game file. For example:
+Copy file `.env.default` to `.env` and modify any relevant setting as needed. For example:
 
-```
-LOCAL_SCENE_PATH=../moving-platforms-multiplayer-test/bin/game.js
+```bash
+cp .env.default .env
 ```
 
-Run `yarn` to install dependencies, `yarn build` to build the server, and every time you compile your scene the server should be started running `yarn start`
+Run `yarn` to install dependencies, `yarn build` to build the server. You can also run `yarn build:watch` to keep monitoring for changes and recompiling to pick
+up those changes.
+
+```bash
+yarn
+yarn build
+```
+
+Finally, run `yarn start` to start the server.
+
+```bash
+yarn start
+```
 
 # Deploying the server to prod
 
-You can find a public docker image in `quay.io/decentraland/collaborative-editor-server`, or build it yourself.
+You can find a public docker image in `quay.io/decentraland/collaborative-editor-server`.
 
-`LOCAL_SCENE_PATH` should not be included in the deployed environment. You can specify a world server url with `WORLD_SERVER_URL`, and you *must* specify a `DEBUGGING_SECRET`.
-
-Once the server is running and before be able to use the server in a world, you need to request the server to load the world's scene:
-
-```
-curl -H "Content-Type: application/json" -X POST --data '{"secret": <secret>, "name": "<world name>"}' https://<server url>/debugging/reload
+```bash
+docker pull quay.io/decentraland/collaborative-editor-server:latest
+docker run -p 8080:3000 -n collab-editor quay.io/decentraland/collaborative-editor-server:latest
 ```
 
-you can use the same command to restart the collaborative editor state.
-
-Please remember this API is alpha, eventually, we would like to integrate new worlds deployment in a more straightforward way.
+Please remember this API is in alpha state; it can change without any heads up.
