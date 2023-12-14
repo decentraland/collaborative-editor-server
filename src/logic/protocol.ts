@@ -1,8 +1,13 @@
 export enum MessageType {
+  // Only send by this server
   Init = 1,
   ParticipantJoined = 2,
   ParticipantLeft = 3,
-  Crdt = 4
+
+  // Just stored and forwarded
+  ParticipantSelectedEntity = 4,
+  ParticipantUnselectedEntity = 5,
+  Crdt = 6
 }
 
 const decoder = new TextDecoder()
@@ -26,10 +31,6 @@ export function createParticipantJoinedMessage(address: string): Uint8Array {
 
 export function createParticipantLeftMessage(address: string): Uint8Array {
   return encodeMessage(MessageType.ParticipantLeft, new Uint8Array(encoder.encode(address)))
-}
-
-export function createCrdtMessage(crdt: Uint8Array): Uint8Array {
-  return encodeMessage(MessageType.Crdt, crdt)
 }
 
 export function createInitMessage(participants: string[]): Uint8Array {
