@@ -26,7 +26,7 @@ You can find a public docker image in `quay.io/decentraland/collaborative-editor
 
 ```bash
 docker pull quay.io/decentraland/collaborative-editor-server:latest
-docker run -p 8080:3000 -n collab-editor quay.io/decentraland/collaborative-editor-server:latest
+docker run -p 8080:3000 --name collab-editor quay.io/decentraland/collaborative-editor-server:latest
 ```
 
 Please remember this API is in alpha state; it can change without any heads up.
