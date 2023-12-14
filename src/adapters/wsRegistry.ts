@@ -83,7 +83,11 @@ export function createWSRegistry(
 
     ws.on('message', (data: ArrayBuffer) => {
       const [messageType] = decodeMessage(new Uint8Array(data))
-      if (messageType !== MessageType.Crdt) {
+      if (
+        ![MessageType.Crdt, MessageType.ParticipantSelectedEntity, MessageType.ParticipantUnselectedEntity].includes(
+          messageType
+        )
+      ) {
         logger.error(`Received invalid message type ${messageType}`)
         return
       }
