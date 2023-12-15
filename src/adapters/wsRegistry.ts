@@ -4,9 +4,18 @@ import {
   createParticipantJoinedMessage,
   createParticipantLeftMessage,
   decodeMessage,
+  decodeText,
   MessageType
 } from '../logic/protocol'
 
+export function decodeUint8Array(data: Uint8Array): any {
+  const asText = decodeText(data)
+  try {
+    return JSON.parse(asText)
+  } catch (_) {
+    return asText
+  }
+}
 export function createWSRegistry(
   { logs }: Pick<AppComponents, 'logs'>,
   broadcast: (roomId: string, message: Uint8Array) => void
@@ -72,13 +81,17 @@ export function createWSRegistry(
     })
 
     ws.on('message', (data: ArrayBuffer) => {
-      const [messageType] = decodeMessage(new Uint8Array(data))
+      const [messageType, encoded] = decodeMessage(new Uint8Array(data))
+      logger.debug(`Received message from ${ws.address}`, {
+        messageType,
+        content: decodeUint8Array(encoded)
+      })
       if (
         ![MessageType.Crdt, MessageType.ParticipantSelectedEntity, MessageType.ParticipantUnselectedEntity].includes(
           messageType
         )
       ) {
-        logger.error(`Received invalid message type ${messageType}`)
+        logger.warn(`Received invalid message type ${messageType}`)
         return
       }
       ws.publish(ws.sessionId, data, true)

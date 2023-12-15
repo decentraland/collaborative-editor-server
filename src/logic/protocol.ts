@@ -47,3 +47,7 @@ export function createInitMessage(participants: string[]): Uint8Array {
 export function decodeJSON(data: Uint8Array) {
   return JSON.parse(decoder.decode(data))
 }
+
+export function decodeText(data: Uint8Array) {
+  return decoder.decode(data)
+}
