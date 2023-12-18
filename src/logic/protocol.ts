@@ -26,15 +26,17 @@ export function encodeMessage(msgType: MessageType, message: Uint8Array): Uint8A
 }
 
 export function createParticipantJoinedMessage(address: string): Uint8Array {
-  return encodeMessage(MessageType.ParticipantJoined, new Uint8Array(encoder.encode(address)))
+  const data = JSON.stringify({ participant: address })
+  return encodeMessage(MessageType.ParticipantJoined, new Uint8Array(encoder.encode(data)))
 }
 
 export function createParticipantLeftMessage(address: string): Uint8Array {
-  return encodeMessage(MessageType.ParticipantLeft, new Uint8Array(encoder.encode(address)))
+  const data = JSON.stringify({ participant: address })
+  return encodeMessage(MessageType.ParticipantLeft, new Uint8Array(encoder.encode(data)))
 }
 
 export function createInitMessage(participants: string[]): Uint8Array {
-  const data = JSON.stringify(participants)
+  const data = JSON.stringify({ participants })
   const buff = new Uint8Array(data.length + 1)
   const view = new DataView(buff.buffer)
   let offset = 0
