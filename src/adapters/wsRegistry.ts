@@ -17,7 +17,7 @@ export function decodeUint8Array(data: Uint8Array): any {
   }
 }
 export function createWSRegistry(
-  { logs }: Pick<AppComponents, 'logs'>,
+  { logs, metrics }: Pick<AppComponents, 'logs' | 'metrics'>,
   broadcast: (roomId: string, message: Uint8Array) => void
 ): IWSRegistryComponent {
   const logger = logs.getLogger('ws-registry')
@@ -28,6 +28,7 @@ export function createWSRegistry(
       logger.debug('Creating room', { sessionId })
       registry.set(sessionId, new Set<WebSocket>())
     }
+    metrics.observe('collaborative_editor_server_room_count', {}, registry.size)
     return registry.get(sessionId)!
   }
 
@@ -47,7 +48,9 @@ export function createWSRegistry(
         count: roomInstance.size
       })
       registry.delete(socket.sessionId)
+      metrics.observe('collaborative_editor_server_room_count', {}, registry.size)
     }
+    metrics.observe('collaborative_editor_server_connection_count', {}, getConnectionCount())
 
     socket.off('message')
 
@@ -86,16 +89,38 @@ export function createWSRegistry(
         messageType,
         content: decodeUint8Array(encoded)
       })
+      metrics.observe('collaborative_editor_server_recv_count', { room: ws.sessionId, msg_type: messageType }, 1)
+      metrics.observe(
+        'collaborative_editor_server_recv_bytes',
+        { room: ws.sessionId, msg_type: messageType },
+        data.byteLength
+      )
+
       if (
         ![MessageType.Crdt, MessageType.ParticipantSelectedEntity, MessageType.ParticipantUnselectedEntity].includes(
           messageType
         )
       ) {
+        metrics.increment('collaborative_editor_server_unknown_sent_messages_total', { room: ws.sessionId }, 1)
         logger.warn(`Received invalid message type ${messageType}`)
         return
       }
+
+      metrics.observe(
+        'collaborative_editor_server_sent_count',
+        { room: ws.sessionId, msg_type: messageType },
+        roomInstance.size
+      )
+      metrics.observe(
+        'collaborative_editor_server_sent_bytes',
+        { room: ws.sessionId, msg_type: messageType },
+        data.byteLength * roomInstance.size
+      )
+
       ws.publish(ws.sessionId, data, true)
     })
+
+    metrics.observe('collaborative_editor_server_connection_count', {}, getConnectionCount())
 
     // tell the user about the other participants in the room
     const peerIdentities: string[] = []
@@ -105,6 +130,14 @@ export function createWSRegistry(
       }
     }
     const initMessage = createInitMessage(peerIdentities)
+
+    metrics.observe('collaborative_editor_server_sent_count', { room: ws.sessionId, msg_type: MessageType.Init }, 1)
+    metrics.observe(
+      'collaborative_editor_server_sent_bytes',
+      { room: ws.sessionId, msg_type: MessageType.Init },
+      initMessage.byteLength
+    )
+
     if (ws.send(initMessage, true) !== 1) {
       logger.error('Closing connection: cannot send init message')
       try {
@@ -116,6 +149,17 @@ export function createWSRegistry(
     // broadcast to all other participants in the room that this user is joining them
     const joinedMessage = createParticipantJoinedMessage(address)
     broadcast(ws.sessionId, joinedMessage)
+
+    metrics.observe(
+      'collaborative_editor_server_sent_count',
+      { room: ws.sessionId, msg_type: MessageType.ParticipantJoined },
+      roomInstance.size
+    )
+    metrics.observe(
+      'collaborative_editor_server_sent_bytes',
+      { room: ws.sessionId, msg_type: MessageType.ParticipantJoined },
+      initMessage.byteLength * roomInstance.size
+    )
 
     // subscribe the new user to the room
     ws.subscribe(ws.sessionId)

@@ -22,7 +22,7 @@ export async function initComponents(): Promise<AppComponents> {
   const fetch = createFetchComponent()
   const uws = await getUnderlyingServer<TemplatedApp>(server)
 
-  const wsRegistry = createWSRegistry({ logs }, (room, message) => {
+  const wsRegistry = createWSRegistry({ logs, metrics }, (room, message) => {
     uws.publish(room, message, true)
   })
 
