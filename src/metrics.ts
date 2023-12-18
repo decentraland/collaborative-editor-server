@@ -14,29 +14,28 @@ export const metricDeclarations = {
     type: IMetricsComponent.GaugeType
   },
   collaborative_editor_server_recv_bytes: {
-    help: 'Received size in bytes per room',
-    type: IMetricsComponent.CounterType,
-    labelNames: ['room', 'msg_type']
+    help: 'Received size in bytes',
+    type: IMetricsComponent.HistogramType,
+    labelNames: ['msg_type']
   },
   collaborative_editor_server_sent_bytes: {
-    help: 'Sent size in bytes per room',
-    type: IMetricsComponent.CounterType,
-    labelNames: ['room', 'msg_type']
+    help: 'Sent size in bytes',
+    type: IMetricsComponent.HistogramType,
+    labelNames: ['msg_type']
   },
   collaborative_editor_server_recv_count: {
-    help: 'Received number of messages per room',
-    type: IMetricsComponent.GaugeType,
-    labelNames: ['room', 'msg_type']
+    help: 'Received number of messages',
+    type: IMetricsComponent.CounterType,
+    labelNames: ['msg_type']
   },
   collaborative_editor_server_sent_count: {
-    help: 'Sent number of messages per room',
-    type: IMetricsComponent.GaugeType,
-    labelNames: ['room', 'msg_type']
+    help: 'Sent number of messages',
+    type: IMetricsComponent.CounterType,
+    labelNames: ['msg_type']
   },
   collaborative_editor_server_unknown_sent_messages_total: {
     help: 'Total amount of unknown messages received',
-    type: IMetricsComponent.CounterType,
-    labelNames: ['room']
+    type: IMetricsComponent.CounterType
   }
 }
 

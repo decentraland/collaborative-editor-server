@@ -89,31 +89,23 @@ export function createWSRegistry(
         messageType,
         content: decodeUint8Array(encoded)
       })
-      metrics.observe('collaborative_editor_server_recv_count', { room: ws.sessionId, msg_type: messageType }, 1)
-      metrics.observe(
-        'collaborative_editor_server_recv_bytes',
-        { room: ws.sessionId, msg_type: messageType },
-        data.byteLength
-      )
+      metrics.increment('collaborative_editor_server_recv_count', { msg_type: messageType })
+      metrics.observe('collaborative_editor_server_recv_bytes', { msg_type: messageType }, data.byteLength)
 
       if (
         ![MessageType.Crdt, MessageType.ParticipantSelectedEntity, MessageType.ParticipantUnselectedEntity].includes(
           messageType
         )
       ) {
-        metrics.increment('collaborative_editor_server_unknown_sent_messages_total', { room: ws.sessionId }, 1)
+        metrics.increment('collaborative_editor_server_unknown_sent_messages_total')
         logger.warn(`Received invalid message type ${messageType}`)
         return
       }
 
-      metrics.observe(
-        'collaborative_editor_server_sent_count',
-        { room: ws.sessionId, msg_type: messageType },
-        roomInstance.size
-      )
+      metrics.increment('collaborative_editor_server_sent_count', { msg_type: messageType }, roomInstance.size)
       metrics.observe(
         'collaborative_editor_server_sent_bytes',
-        { room: ws.sessionId, msg_type: messageType },
+        { msg_type: messageType },
         data.byteLength * roomInstance.size
       )
 
@@ -131,12 +123,8 @@ export function createWSRegistry(
     }
     const initMessage = createInitMessage(peerIdentities)
 
-    metrics.observe('collaborative_editor_server_sent_count', { room: ws.sessionId, msg_type: MessageType.Init }, 1)
-    metrics.observe(
-      'collaborative_editor_server_sent_bytes',
-      { room: ws.sessionId, msg_type: MessageType.Init },
-      initMessage.byteLength
-    )
+    metrics.increment('collaborative_editor_server_sent_count', { msg_type: MessageType.Init })
+    metrics.observe('collaborative_editor_server_sent_bytes', { msg_type: MessageType.Init }, initMessage.byteLength)
 
     if (ws.send(initMessage, true) !== 1) {
       logger.error('Closing connection: cannot send init message')
@@ -150,14 +138,14 @@ export function createWSRegistry(
     const joinedMessage = createParticipantJoinedMessage(address)
     broadcast(ws.sessionId, joinedMessage)
 
-    metrics.observe(
+    metrics.increment(
       'collaborative_editor_server_sent_count',
-      { room: ws.sessionId, msg_type: MessageType.ParticipantJoined },
+      { msg_type: MessageType.ParticipantJoined },
       roomInstance.size
     )
     metrics.observe(
       'collaborative_editor_server_sent_bytes',
-      { room: ws.sessionId, msg_type: MessageType.ParticipantJoined },
+      { msg_type: MessageType.ParticipantJoined },
       initMessage.byteLength * roomInstance.size
     )
 
