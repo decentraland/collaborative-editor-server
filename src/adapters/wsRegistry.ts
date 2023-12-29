@@ -93,9 +93,12 @@ export function createWSRegistry(
       metrics.observe('collaborative_editor_server_recv_bytes', { msg_type: messageType }, data.byteLength)
 
       if (
-        ![MessageType.Crdt, MessageType.ParticipantSelectedEntity, MessageType.ParticipantUnselectedEntity].includes(
-          messageType
-        )
+        ![
+          MessageType.Crdt,
+          MessageType.ParticipantSelectedEntity,
+          MessageType.ParticipantUnselectedEntity,
+          MessageType.FS
+        ].includes(messageType)
       ) {
         metrics.increment('collaborative_editor_server_unknown_sent_messages_total')
         logger.warn(`Received invalid message type ${messageType}`)

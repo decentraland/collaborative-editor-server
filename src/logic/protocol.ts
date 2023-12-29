@@ -7,7 +7,8 @@ export enum MessageType {
   // Just stored and forwarded
   ParticipantSelectedEntity = 4,
   ParticipantUnselectedEntity = 5,
-  Crdt = 6
+  Crdt = 6,
+  FS = 7
 }
 
 const decoder = new TextDecoder()
