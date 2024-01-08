@@ -347,9 +347,9 @@
     node-fetch "^2.7.0"
 
 "@dcl/schemas@^9.2.0":
-  version "9.9.0"
-  resolved "https://registry.yarnpkg.com/@dcl/schemas/-/schemas-9.9.0.tgz#868693b46ef3d64b166d095bb0405d5119de461a"
-  integrity sha512-n7zgMWTHb0O8oqb4kfVJzuTi/R3qkp/BZTAqhS1BRtSeulVhEVAnpPd2R6nzW9gC9D0Wp1yzaMo53gUIAcHSDw==
+  version "9.11.1"
+  resolved "https://registry.yarnpkg.com/@dcl/schemas/-/schemas-9.11.1.tgz#847bff70aa56f183f00856b40ce343c1ff80f54e"
+  integrity sha512-U+opZZSAlmtMCsdYAI14PVbkG/Wqt0WmFbdLgzZjN7w+pLHvXCk2raMTX6N1ePV3aOWx9bw7pZ5ARNXBi/Kfkw==
   dependencies:
     ajv "^8.11.0"
     ajv-errors "^3.0.0"
@@ -985,6 +985,20 @@
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@well-known-components/http-server/-/http-server-2.0.0.tgz#85ec93080ae64f962782699db3eeecd597f59405"
   integrity sha512-baDP0+MpgqTnKLFFXS41WBbg9QIGCXTEA7BHf6JqW1evrTW10MKEx+rgEvQQlhCA5oXxUdKOD+xNnR3GqzGw9w==
+  dependencies:
+    "@types/http-errors" "^2.0.1"
+    destroy "^1.2.0"
+    fp-future "^1.0.1"
+    http-errors "^2.0.0"
+    mitt "^3.0.0"
+    node-fetch "^2.6.9"
+    on-finished "^2.4.1"
+    path-to-regexp "^6.2.1"
+
+"@well-known-components/http-server@^2.0.1-20231004190652.commit-d9004f2":
+  version "2.0.1-20231004190652.commit-d9004f2"
+  resolved "https://registry.yarnpkg.com/@well-known-components/http-server/-/http-server-2.0.1-20231004190652.commit-d9004f2.tgz#bfbb8a26c3bb5eaeb9901ed6c021a489f055c001"
+  integrity sha512-n9mkN+Cp21fQ+COZDJ0o70YJGeLBlAkGhSL1d+UOf48l5xVgNE76D7QaaaCP+EadUchfnBlF4v2nEksmKiHczg==
   dependencies:
     "@types/http-errors" "^2.0.1"
     destroy "^1.2.0"
