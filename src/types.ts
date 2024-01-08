@@ -1,5 +1,5 @@
 import type { IFetchComponent } from '@well-known-components/http-server'
-import type {
+import {
   IBaseComponent,
   IConfigComponent,
   IHttpServerComponent,
@@ -8,7 +8,6 @@ import type {
 } from '@well-known-components/interfaces'
 import { metricDeclarations } from './metrics'
 import { WsUserData } from '@well-known-components/http-server/dist/uws'
-import { IWSRegistryComponent } from './adapters/wsRegistry'
 import { DecentralandSignatureContext } from '@dcl/platform-crypto-middleware'
 
 export type GlobalContext = {
@@ -49,6 +48,14 @@ export type HandlerContextWithPath<
   DecentralandSignatureContext<any>
 
 export type Context<Path extends string = any> = IHttpServerComponent.PathAwareContext<GlobalContext, Path>
+
+export type IWSRegistryComponent = {
+  getRooms(): string[]
+  getRoomCount(): number
+  getConnectionCount(): number
+  removeFromRoom(socket: WebSocket): void
+  addSocketToRoom(ws: WebSocket): void
+}
 
 export type WebSocket = WsUserData & {
   address: string
