@@ -1,5 +1,7 @@
 # Collaborative Editor Server 
 
+[![Coverage Status](https://coveralls.io/repos/github/decentraland/collaborative-editor-server/badge.svg?branch=coverage)](https://coveralls.io/github/decentraland/collaborative-editor-server?branch=coverage)
+
 A server designed to enable collaborative scene editing.
 
 # Running locally
