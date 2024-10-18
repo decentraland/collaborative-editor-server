@@ -1,3 +1,7 @@
+# Collaborative Editor Server 
+
+A server designed to enable collaborative scene editing.
+
 # Running locally
 
 Copy file `.env.default` to `.env` and modify any relevant setting as needed. For example:
